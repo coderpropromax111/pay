@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fronti - Choose Your Plan</title>
+    <link rel="icon" type="image/png" href="/static/logolong.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: linear-gradient(to right, #00ffff, #a855f7);
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --bg: #000000;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .plan-container {
+            background: var(--card-bg);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem 2rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .plan-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: var(--secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .plan-currency {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .plan-features {
+            text-align: left;
+            margin: 2rem 0 1.5rem 0;
+            padding-left: 0;
+            list-style: none;
+        }
+        .plan-features li {
+            margin-bottom: 1rem;
+            font-size: 1.08rem;
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+        }
+        .plan-features li i {
+            color: var(--primary);
+            margin-right: 0.7rem;
+            font-size: 1.1rem;
+        }
+        .choose-btn {
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 0;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(99,102,241,0.08);
+        }
+        .choose-btn:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.15);
+        }
+        @media (max-width: 500px) {
+            .plan-container {
+                padding: 1.2rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="plan-container">
+        <div class="plan-title"><i class="fas fa-rocket"></i> Fronti Plan</div>
+        <div class="plan-price">
+            <span class="plan-currency">₹</span>1
+            <span style="font-size:1rem; color:var(--text-secondary); font-weight:400;">/month</span>
+        </div>
+        <ul class="plan-features">
+            <li><i class="fas fa-mobile-alt"></i>App development</li>
+            <li><i class="fas fa-cloud-upload-alt"></i>Deploy &amp; export unlimited</li>
+            <li><i class="fas fa-coins"></i>You can earn money</li>
+            <li><i class="fas fa-infinity"></i>Unlimited preview</li>
+            <li><i class="fab fa-android"></i>Make Android apps</li>
+            <li><i class="fas fa-desktop"></i>Make EXE (Windows) apps</li>
+            <li><i class="fas fa-globe"></i>Make Web apps</li>
+        </ul>
+        <button class="choose-btn">Choose Fronti Plan</button>
+        <div style="margin-top:2rem; display:flex; align-items:center; font-size:1rem;">
+            <input type="checkbox" id="agree-policy" style="margin-right:10px;">
+            <label for="agree-policy" style="color:#a3aed6; cursor:pointer;">
+                By agreeing, you allow and accept the
+                <a href="paypolicy.html" target="_blank" style="color:#6366f1; text-decoration:underline; cursor:pointer;">subscription policy</a>.
+            </label>
+        </div>
+    </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // Your Firebase config (same as login page)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBo-iuUmIVgcBYWG8ltWgugkVbfqFUf4wg",
+        authDomain: "fronti-login.firebaseapp.com",
+        databaseURL: "https://fronti-login-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "fronti-login",
+        storageBucket: "fronti-login.appspot.com",
+        messagingSenderId: "403453632821",
+        appId: "1:403453632821:web:7583bc00458748e447ac7c",
+        measurementId: "G-GH16N4RN8S"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    document.querySelector(".choose-btn").onclick = async () => {
+        const agreed = document.getElementById("agree-policy").checked;
+        if (!agreed) {
+            alert("Please agree to the subscription policy.");
+            return;
+        }
+
+        const res = await fetch('/create-order', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ amount: 1 }) // ₹1 in rupees
+        });
+
+        const data = await res.json();
+
+        const options = {
+            key: data.key_id,
+            amount: data.amount,
+            currency: data.currency,
+            name: "Fronti Pro",
+            description: "1-month subscription",
+            order_id: data.order_id,
+            handler: async function (response) {
+                const verifyRes = await fetch('/verify-payment', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(response)
+                });
+
+                const result = await verifyRes.json();
+                alert(result.message);
+
+                if (result.message.includes("verified")) {
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            await update(ref(db, 'users/' + user.uid), { pay: true });
+                            window.location.href = "https://home.fronti.tech";
+                        } else {
+                            alert("You must be logged in to update payment status.");
+                        }
+                    });
+                }
+            },
+            theme: {
+                color: "#6366f1"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+    };
+    </script>
+</body>
+</html>
